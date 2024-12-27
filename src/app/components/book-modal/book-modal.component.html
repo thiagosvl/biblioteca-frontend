@@ -1,0 +1,333 @@
+<div class="header-row">
+  <h2 mat-dialog-title>{{ isEditMode ? "Edição" : "Cadastro" }} de Livro</h2>
+
+  <div>
+    <button tabindex="-1" mat-flat-button color="primary" (click)="onSaveForm()" class="mr-3">
+      {{ isEditMode ? "Salvar alterações" : "Confirmar" }}
+    </button>
+
+    <button mat-icon-button (click)="onCancel()" class="pr-3">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+@if (loading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+<mat-dialog-content class="book-modal-content">
+  <form [formGroup]="form">
+    <section>
+      <h3 mat-dialog-title>Informações Básicas</h3>
+
+      <div class="grid grid-cols-12">
+        <div class="col-span-4 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="title" />
+            <mat-error *ngIf="form.get('title')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          @if (loadingAuthors) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <mat-form-field>
+            <mat-label>Autor</mat-label>
+            <mat-select
+              formControlName="author_id"
+              (selectionChange)="onAuthorChange($event)"
+            >
+              <mat-option value="create-new" class="create-option">
+                Cadastrar Autor
+              </mat-option>
+              <mat-optgroup label="Opções">
+                @for (author of authors; track author) {
+                <mat-option [value]="author.id">{{
+                  author.full_name
+                }}</mat-option>
+                }
+              </mat-optgroup>
+            </mat-select>
+            <mat-error *ngIf="form.get('publisher_id')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          @if (loadingBookTypes) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <mat-form-field>
+            <mat-label>Tipo de Livro</mat-label>
+            <mat-select
+              formControlName="book_type_id"
+              (selectionChange)="onBookTypeChange($event)"
+            >
+              <mat-option value="create-new" class="create-option">
+                Cadastrar Tipo de Livro
+              </mat-option>
+              <mat-optgroup label="Opções">
+                @for (bookType of bookTypes; track bookType) {
+                <mat-option [value]="bookType.id">{{
+                  bookType.name
+                }}</mat-option>
+                }
+              </mat-optgroup>
+            </mat-select>
+
+            <mat-error *ngIf="form.get('book_type_id')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          @if (loadingPublishers) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <mat-form-field>
+            <mat-label>Editora</mat-label>
+            <mat-select
+              formControlName="publisher_id"
+              (selectionChange)="onPublisherChange($event)"
+            >
+              <mat-option value="create-new" class="create-option">
+                Cadastrar Editora
+              </mat-option>
+              <mat-optgroup label="Opções">
+                @for (publisher of publishers; track publisher) {
+                <mat-option [value]="publisher.id">{{
+                  publisher.name
+                }}</mat-option>
+                }
+              </mat-optgroup>
+            </mat-select>
+            <mat-error *ngIf="form.get('publisher_id')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          @if (loadingCollections) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <mat-form-field>
+            <mat-label>Coleção</mat-label>
+            <mat-select
+              formControlName="collection_id"
+              (selectionChange)="onCollectionChange($event)"
+            >
+              <mat-option value="create-new" class="create-option">
+                Cadastrar Coleção
+              </mat-option>
+              <mat-optgroup label="Opções">
+                @for (collection of collections; track collection) {
+                <mat-option [value]="collection.id">{{
+                  collection.name
+                }}</mat-option>
+                }
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          @if (loadingSubjects) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <mat-form-field>
+            <mat-label>Assunto</mat-label>
+            <mat-select
+              formControlName="subject_id"
+              (selectionChange)="onSubjectChange($event)"
+            >
+              <mat-option value="create-new" class="create-option">
+                Cadastrar Assunto
+              </mat-option>
+              <mat-optgroup label="Opções">
+                @for (subject of subjects; track subject) {
+                <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+                }
+              </mat-optgroup>
+            </mat-select>
+            <mat-error *ngIf="form.get('subject_id')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 mat-dialog-title>Detalhes da Publicação</h3>
+
+      <div class="grid grid-cols-12">
+        <div class="col-span-4 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Edição</mat-label>
+            <input matInput formControlName="edition" />
+            <mat-error *ngIf="form.get('edition')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Idioma</mat-label>
+            <input matInput formControlName="language" />
+            <mat-error *ngIf="form.get('language')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-2 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Classificação</mat-label>
+            <input matInput formControlName="classification" />
+            <mat-error *ngIf="form.get('classification')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-2 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>N° de Páginas</mat-label>
+            <input type="number" matInput formControlName="page_count" />
+            <mat-error *ngIf="form.get('page_count')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-2 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Ano</mat-label>
+            <input
+              placeholder="Formato: AAAA"
+              matInput
+              formControlName="year"
+            />
+            <mat-error *ngIf="form.get('year')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+            <mat-error *ngIf="form.get('year')?.hasError('minlength')">
+              Mínimo 4 digitos
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-3 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>ISBN</mat-label>
+            <input matInput formControlName="isbn" />
+            <mat-hint>Formato: 000–00–000–0000–0</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-3 p-2">
+          <mat-form-field>
+            <mat-label>País</mat-label>
+            <mat-select formControlName="country">
+              @for (country of countries; track country) {
+              <mat-option [value]="country">{{ country }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-4 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Cidade</mat-label>
+            <input matInput formControlName="city" />
+            <mat-error *ngIf="form.get('city')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 mat-dialog-title>Estoque e Controle</h3>
+
+      <div class="grid grid-cols-12">
+        <div class="col-span-3 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Qtd. Exemplares</mat-label>
+            <input type="number" matInput formControlName="quantity" />
+            <mat-error *ngIf="form.get('quantity')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-3 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Prateleira</mat-label>
+            <input matInput formControlName="shelf" />
+            <mat-error *ngIf="form.get('shelf')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-3 p-2">
+          <mat-form-field>
+            <mat-label>Entrada</mat-label>
+            <input
+              matInput
+              [matDatepicker]="entryDatePicker"
+              formControlName="entry_date"
+            />
+            <mat-hint>DD/MM/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="entryDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #entryDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-3 p-2">
+          <mat-form-field>
+            <mat-label>Tombado em</mat-label>
+            <input
+              matInput
+              [matDatepicker]="tombDatePicker"
+              formControlName="tomb_date"
+            />
+            <mat-hint>DD/MM/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="tombDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #tombDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 mat-dialog-title>Observações</h3>
+
+      <div class="grid grid-cols-12">
+        <div class="col-span-12 p-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Informações adicionais</mat-label>
+            <textarea matInput formControlName="observations"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+  </form>
+</mat-dialog-content>

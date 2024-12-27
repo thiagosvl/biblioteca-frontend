@@ -1,0 +1,20 @@
+<div class="header-row">
+  <div>
+    <h2 mat-dialog-title>Confimar exclusão</h2>
+  </div>
+  <button mat-icon-button (click)="onCancel()" class="pr-3">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <p>
+    <b>Esta ação é irreversível</b>. <br />Após a confirmação, não será possível
+    recuperar o registro.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="onConfirm()">
+    Confirmar
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,9 @@
+.create-option {
+    font-weight: bold;
+    color: var(--mdc-protected-button-label-text-color, var(--mat-app-primary)); /* Cor personalizada */
+  }
+
+.book-modal-content {
+  padding-top:0;
+  overflow: visible;
+}
